@@ -8,12 +8,23 @@ import javax.swing.JOptionPane;
 public class Ciphermasters{
    public static void main(String[] args){
       
+      int[] totalScore = StartUp();
+      
+      
+      for(int i = 0; i < totalScore.length; i++){
+         System.out.print("Player " + (i + 1) + "'s score is: " + totalScore[i]);
+      }
+   }//end main method
+   
+   //This method initialized a bunch of stuff for the game
+   public static int[] StartUp(){
+   
       Scanner sc = new Scanner(System.in);
       
       System.out.print("How many Ciphermasters are playing today? ");
       int numPlayers = sc.nextInt();
       String[] names = new String[numPlayers];
-      int[] score = new int[numPlayers];
+      int[] totalScore = new int[numPlayers];
       int level = 0;
       
       for(int i = 0; i < numPlayers; i++){
@@ -24,28 +35,72 @@ public class Ciphermasters{
       for(int i = 0; i < numPlayers; i++){
          System.out.print(names[i] + ", ");
       }
-
-      ChooseGame(numPlayers, score, level);
       
-   }//end main method
+      System.out.println();
+
+      /*This is for testing that score updating is working properly
+      for(int i = 0; i < numPlayers; i++){
+         System.out.print("Player " + i + "'s score is: " + totalScore[i]);
+      }*/
+      
+      ChooseGame(totalScore, level);
+      
+      /* This is for testing that score updating is working properly
+      for(int i = 0; i < numPlayers; i++){
+         System.out.print("Player " + i + "'s score is: " + totalScore[i]);
+      }*/
+
+      return totalScore;   
+   }
    
    //This method promts the players to choose which game to play and starts that game
-   public static int[] ChooseGame(int numPlayers, int[] score, int level){
+   public static void ChooseGame(int[] totalScore, int level){
       
       Scanner sc = new Scanner(System.in);
+      boolean again = true;
       
-      System.out.print("which game would you like to play? Enter 1 for the letters game, 2 for the numbers game, 3 to read instructions and 0 to exit the game. ");
-      int choice = sc.nextInt();
-      
-      System.out.print(choice);
-      
-      for(int i = 0; i < numPlayers; i++){
-         score[i] += 0;   //I'll have to change this line for sure
+      while(again == true){
+         System.out.print("which game would you like to play? Enter 1 for the letters game, 2 for the numbers game, 3 to read instructions and 0 to exit the game. ");
+         int choice = sc.nextInt();
+         
+         if(choice == 1){
+            System.out.println("You have chosen the letters game!");
+            Letters();
+         }
+         else if(choice ==2){
+            System.out.println("You have chosen the numbers game!");
+            Numbers();
+         }
+         else if(choice == 3){
+            System.out.println("These are the instructions.");
+         }
+         else if(choice == 4){
+            again = false;
+            WrapUp();
+         }
+         else{
+            System.out.println("I'm sorry. I don't recognize that command. Please enter 1 for the letters game, 2 for the numbers game, 3 to read instructions or 0 to exit the game. ");
+            choice = sc.nextInt();
+         }
       }
       
-      return score;
+      for(int i = 0; i < totalScore.length; i++){
+         totalScore[i] += 1;   //I'll have to change this line for sure
+      }      
    
    }//end ChooseGame method
+   
+   public static void Letters(){
+      System.out.println("This is where the letters game will be played.");
+   }//end Letters method
+   
+   public static void Numbers(){
+      System.out.println("This is where the numbers game will be played.");
+   }//end Numbers method
+   
+   public static void WrapUp(){
+      System.out.println("This is where the wrap-up method will do its thing.");
+   }//end WrapUp method
 
    
 }//end class
