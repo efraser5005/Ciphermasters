@@ -8,18 +8,13 @@ import javax.swing.JOptionPane;
 public class Ciphermasters{
    public static void main(String[] args){
       
-      StartUp();
-      
-   }//end main method
-   
-   //Right now this method only asks how many players there are and what their names are, then prints their names. Pretty boring, but it'll get better.
-   public static void StartUp(){
-      
       Scanner sc = new Scanner(System.in);
       
       System.out.print("How many Ciphermasters are playing today? ");
       int numPlayers = sc.nextInt();
       String[] names = new String[numPlayers];
+      int[] score = new int[numPlayers];
+      int level = 0;
       
       for(int i = 0; i < numPlayers; i++){
          System.out.print("Player " + (i + 1) + ", what is your name? ");
@@ -29,8 +24,28 @@ public class Ciphermasters{
       for(int i = 0; i < numPlayers; i++){
          System.out.print(names[i] + ", ");
       }
+
+      ChooseGame(numPlayers, score, level);
       
+   }//end main method
    
-   }//end StartUp method
+   //This method promts the players to choose which game to play and starts that game
+   public static int[] ChooseGame(int numPlayers, int[] score, int level){
+      
+      Scanner sc = new Scanner(System.in);
+      
+      System.out.print("which game would you like to play? Enter 1 for the letters game, 2 for the numbers game, 3 to read instructions and 0 to exit the game. ");
+      int choice = sc.nextInt();
+      
+      System.out.print(choice);
+      
+      for(int i = 0; i < numPlayers; i++){
+         score[i] += 0;   //I'll have to change this line for sure
+      }
+      
+      return score;
+   
+   }//end ChooseGame method
+
    
 }//end class
