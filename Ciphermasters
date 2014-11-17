@@ -1,0 +1,36 @@
+//This this the main game file for Ciphermasters. It does everything!
+
+//Imports
+import java.util.Scanner;
+import java.util.Random;
+import javax.swing.JOptionPane;
+
+public class Ciphermasters{
+   public static void main(String[] args){
+      
+      StartUp();
+      
+   }//end main method
+   
+   //Right now this method only asks how many players there are and what their names are, then prints their names. Pretty boring, but it'll get better.
+   public static void StartUp(){
+      
+      Scanner sc = new Scanner(System.in);
+      
+      System.out.print("How many Ciphermasters are playing today? ");
+      int numPlayers = sc.nextInt();
+      String[] names = new String[numPlayers];
+      
+      for(int i = 0; i < numPlayers; i++){
+         System.out.print("Player " + (i + 1) + ", what is your name? ");
+         names[i] = sc.next();
+      }
+      
+      for(int i = 0; i < numPlayers; i++){
+         System.out.print(names[i] + ", ");
+      }
+      
+   
+   }//end StartUp method
+   
+}//end class
