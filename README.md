@@ -10,5 +10,5 @@ Canada
 
 =============
 
-We can keep all kinds of stuff here!
+This is the readme for Esther's testing branch. This code is full of nonesense.
 
