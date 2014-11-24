@@ -40,20 +40,20 @@ public class Ciphermasters{
 
       /*This is for testing that score updating is working properly
       for(int i = 0; i < numPlayers; i++){
-         System.out.print("Player " + i + "'s score is: " + totalScore[i]);
+         System.out.print("Player " + (i+1) + "'s score is: " + totalScore[i]);
       }*/
       
       ChooseGame(totalScore, level);
       
       /* This is for testing that score updating is working properly
       for(int i = 0; i < numPlayers; i++){
-         System.out.print("Player " + i + "'s score is: " + totalScore[i]);
+         System.out.print("Player " + (i+1) + "'s score is: " + totalScore[i]);
       }*/
 
       return totalScore;   
    }
    
-   //This method promts the players to choose which game to play and starts that game
+   //This method prompts the players to choose which game to play and starts that game
    public static void ChooseGame(int[] totalScore, int level){
       
       Scanner sc = new Scanner(System.in);
@@ -65,7 +65,7 @@ public class Ciphermasters{
          
          if(choice == 1){
             System.out.println("You have chosen the letters game!");
-            Letters();
+            Letters(int[] totalScore, int level);
          }
          else if(choice ==2){
             System.out.println("You have chosen the numbers game!");
