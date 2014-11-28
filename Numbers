@@ -1,0 +1,242 @@
+import java.util.Scanner;
+import java.util.Random;
+//THIS ONE WORKS RIGHT NOW!!!!!!!!!!!!!!
+public class TestFullNumbers{
+
+   public static void main(String[] args){
+   String[] names = {"Esther", "Emma"};
+   int[] totalScore = {0,0};
+   int level = 1;
+   
+   Numbers(2, names, totalScore);
+   
+   }
+   
+   public static void Numbers(int level, String[] names, int[] totalScore){
+      System.out.println("This is where the numbers game will be played.");
+            
+      int numSmall = 0, numLarge = 0;
+      int[] larges = {25, 50, 75, 100};
+      
+      Random rnd = new Random();
+      Scanner sc = new Scanner(System.in);
+      
+      //Sets number of small numbers by level
+      if(level == 1){
+         numSmall = 2;
+      }
+      else if(level == 2){
+         numSmall = 3;
+      }
+      else if(level == 3){
+         numSmall = 4;
+      }
+      else{
+         System.out.println("Esther, you've screwed it up! The level is set to something other than 1, 2 or 3. How did that happen?");
+      }
+      
+      int[] numbers = new int[6];
+      
+      System.out.print("The numbers are: ");
+      
+      //adds random ints less than 10 to the array "numbers" 
+      for(int i = 0; i < numSmall; i++){
+         numbers[i] = rnd.nextInt(9) + 1;
+         System.out.print(numbers[i] + " ");
+      }
+      
+      for(int i = numSmall; i < 6; i++){
+         numbers[i] = larges[rnd.nextInt(4)];
+         System.out.print(numbers[i] + " ");
+      }
+      
+      //randomly generates operations to link the numbers and create target number
+      int[] operations = new int[5];
+      int target = 0;
+      
+      for(int i = 0; i < 5; i++){
+         operations[i] = rnd.nextInt(4) + 1;
+         if(operations[i] == 1){
+            target += numbers[i];
+            //System.out.println("The number is: " + numbers[i] + ". The operation is: + . The target is now: " + target);
+         }
+         else if(operations[i] == 2){
+            if(target > numbers[i]){ //This ensures target stays positive
+               target -= numbers[i];
+               //System.out.println("The number is: " + numbers[i] + ". The operation is: - . The target is now: " + target);
+            }
+            else{
+               target += numbers[i];
+               //System.out.println("The number is: " + numbers[i] + ". The operation is: +. The target is now: " + target);
+            }
+         }
+      }
+      
+      System.out.println("The target number is: " + target);
+      
+      System.out.println("Time's up!"); //This is in place of the timer method for now
+      
+      String[] answers = new String[names.length];
+      
+      //Collects the answers into an array called 'answers'
+      for(int i = 0; i < names.length; i++){
+         System.out.print(names[i] + ", how did you crack the code? Please enter the arithmetical expression you used: ");
+         answers[i] = sc.nextLine();
+         int playerAnswer = ReadAndCheck(answers[i], totalScore[i]);
+         System.out.println("The player's answer is " + playerAnswer);
+         System.out.println("The target number is " + target);
+         Score(names[i], playerAnswer, target);
+      }
+      
+   }//end Numbers method
+      
+   
+   
+   
+   
+   
+   public static int ReadAndCheck(String answer, int score){
+      int charPos = answer.length() - 1;
+      int[] ansNums = new int[answer.length()];
+      int[] ansOps = new int[answer.length()];
+         
+         while(charPos >= 0){          //for each player's answer, runs through their answer string backwards
+            
+            //The first three cases handle the operators, adding them to an array called ansOps         
+            if(answer.charAt(charPos) == '+'){
+               ansOps[charPos] = 1;
+               charPos--;
+            }
+            else if(answer.charAt(charPos) == '-'){
+               ansOps[charPos] = 2;
+               charPos--;
+            }
+            else if(answer.charAt(charPos) == '*'){
+               ansOps[charPos] = 3;
+               charPos--;
+            }
+            //This case handles the numbers
+            else if(Character.isDigit(answer.charAt(charPos))){
+               int ansHunds = 0, ansTens = 0, ansUnits = 0;
+               
+               //These two nested "if"s handle the cases where the number is 2 or 3 digits long
+               if(charPos > 0 && Character.isDigit(answer.charAt(charPos-1))){
+                  
+                  if(charPos > 1 && Character.isDigit(answer.charAt(charPos-2))){
+                     ansHunds = Character.getNumericValue(answer.charAt(charPos-2));
+                  }
+                  
+                  ansTens = Character.getNumericValue(answer.charAt(charPos-1));
+               }
+               
+               ansUnits = Character.getNumericValue(answer.charAt(charPos));
+               
+               ansNums[charPos] = ansHunds * 100 + ansTens * 10 + ansUnits;
+               //System.out.println("ansHunds = " + ansHunds + ", ansTens = " + ansTens + ", ansUnits = " + ansUnits + ", ansNums["+(charPos+1)+"] = " + ansNums[(charPos+1)]);
+               //These "if"s move the charPos to avoid double-counting 2- and 3- digit numbers
+               if(ansHunds != 0){
+                  charPos -=3;
+               }
+               else if(ansTens != 0){
+                  charPos -=2;
+               }
+               else{
+                  charPos--;
+               }
+                              
+               ansHunds = 0; ansTens = 0;
+            }
+            //This handles the case where something other than a number of valid operator has been entered. It prompts the user to re-enter their answer. 
+            //else{
+            //   System.out.print("Error: " + names[i] + " " + answers[i].charAt(charPos) + " is an invalid character. Remember not to put any spaces! Try entering it again: ");
+            //   answers[i] = sc.nextLine();
+         }
+
+      int total = ansNums[0];
+      int nextNum = 0;
+      int counterNums = 0;
+      int counterOps = 0;
+      
+      if(ansOps[0] != 2){
+         for(int i = 0; i < ansNums.length; i++){
+            if(total == 0){
+               total = ansNums[i];
+               counterNums = i +1;
+            }
+            else if(i == 0){
+               counterNums = i+1;
+            }
+         }
+      } 
+     
+      System.out.println("The total is " + total + ", and the index is " + counterNums);
+      
+                  
+      while(counterOps < ansOps.length){
+         
+         while(counterNums < ansNums.length && counterOps < ansOps.length){
+            
+            if(ansNums[counterNums] == 0){
+               counterNums++;
+               System.out.println("Nums counter is " + counterNums + ", nextNum is " + nextNum + ", the Ops counter is " + counterOps + ", the total is " + total);
+            }
+            else{
+               nextNum = ansNums[counterNums];
+               System.out.println("Nums counter is " + counterNums + " and nextNum is " + nextNum + ". The Ops counter is " + counterOps + ", the total is " + total);
+
+               if(ansOps[counterOps] == 0){
+                  counterOps++;
+                  System.out.println("Nums counter is " + counterNums + ", nextNum is " + nextNum + ", the Ops counter is " + counterOps +  ", the total is " + total);
+               }
+               else if(ansOps[counterOps] == 1 ){
+                  total += nextNum;
+                  counterNums++;                 
+                  counterOps++;
+                  System.out.println("Nums counter is " + counterNums + ", nextNum is " + nextNum + ", the Ops counter is " + counterOps + ", the total is " + total);
+               }  
+               else if(ansOps[counterOps] == 2){
+                  total -= nextNum;
+                  counterNums++;
+                  counterOps++;
+                  System.out.println("Nums counter is " + counterNums + ", nextNum is " + nextNum + ", the Ops counter is " + counterOps + ", the total is " + total);
+               }
+               //else if(ansOps[counterOps] == 3){
+                  //total = total * nextNum;
+                  //counterNums++;
+                  //counterOps++;
+               //}
+               else{
+                  //System.out.println("There's something wacky in your ansOps array here: counterOps = " + counterOps + ", counterNums = " + counterNums);// + ", ansOps here is " + ansOps[counterOps] + ", and ansNums here is " + ansNums[counterNums]);
+                  counterOps++;
+                  counterNums++;
+               }
+                  
+               //System.out.println("The total is now " + total);
+               //System.out.println("The Ops counter is: " + counterOps + ", and the Nums counter is: " + counterNums);
+               
+            }
+         }
+         counterOps++;
+      }
+      //System.out.println("The total is: " + total);
+      //System.out.println("The add method is about to end.");
+      return total;
+   }//ends Add method
+   
+   public static void Score(String name, int target, int answer){
+      int gameScore = 0;
+      
+      if(answer == target){
+         gameScore = 3;
+         System.out.println("Great work, " + name + ", you cracked the code! You get 3 points.");
+      }
+      else if(answer > (target - 10) && answer < (target + 10)){
+         gameScore = 1;
+         System.out.println("Not bad, " + name + ", you nearly got it. You get 1 point.");
+      }
+      else{
+         System.out.println("You didn't manage to crack the code. You'll do better next time.");
+      }
+      
+   } 
+}  
