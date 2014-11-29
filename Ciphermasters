@@ -56,18 +56,25 @@ public class Ciphermasters{
    }
    
    //This method prompts the players to choose which game to play and starts that game
-   public static void ChooseGame(int[] totalScore, int level){
+   public static void ChooseGame(int[] totalScore, String[] names){
       
       Scanner sc = new Scanner(System.in);
       boolean again = true;
       
+      int lettLev = 1;
+      int numbLev = 1;
+   
       while(again == true){
          System.out.print("which game would you like to play? Enter 1 for the letters game, 2 for the numbers game, 3 to read instructions and 0 to exit the game. ");
          int choice = sc.nextInt();
          
          if(choice == 1){
             System.out.println("You have chosen the letters game!");
-            Letters(int[] totalScore, int level);
+            Letters(lettLev, names);
+            for(int i = 0; i < names.length; i++){
+               totalscore[i] += gamescore[i];
+            }
+            LevelUp(Letters);
          }
          else if(choice ==2){
             System.out.println("You have chosen the numbers game!");
