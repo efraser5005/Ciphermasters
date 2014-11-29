@@ -74,8 +74,7 @@ public class Ciphermasters{
          
          if(choice == 1){
             System.out.println("You have chosen the letters game!");
-            gamescore = Letters(totalScore,lettLev, names);
-            lettLev = LevelUp(Letters);
+            lettLev = LevelUp(Letters(totaScore,lettLev,names);
          }
          else if(choice ==2){
             System.out.println("You have chosen the numbers game!");
