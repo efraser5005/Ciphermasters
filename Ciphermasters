@@ -318,7 +318,7 @@ public class FraserCarlineProject{
       return level;
    }
    
-   //This method plays the Numbers game
+    //This method plays the Numbers game
    public static int Numbers(int level, String[] names, int[] totalScore){
       
       int gameScore = 0; 
@@ -381,10 +381,12 @@ public class FraserCarlineProject{
       }
       //Informs players if subtraction is needed, based on level
       if(level % 4 == 0 || level % 4 == 3){
-         System.out.println("\nTry to crack the code by adding or subtracting these numbers until you reach the target. You can use each number only once.");
+         System.out.println("\nTry to crack the code by adding or subtracting" +
+            "these numbers until you reach the target. You can use each number only once.");
       }
       else{
-         System.out.println("\nTry to crack the code by adding some of these numbers until you reach the target. You can use each number only once.");
+         System.out.println("\nTry to crack the code by adding some of these numbers until " + 
+            "you reach the target. You can use each number only once.");
       }
       System.out.println("The target number is: " + target);
       
@@ -394,7 +396,8 @@ public class FraserCarlineProject{
       
       if(isTimeUp){
          for(int i = 0; i < names.length; i++){
-            System.out.print(names[i] + ", how did you crack the code? Please enter the arithmetical expression you used: ");
+            System.out.print(names[i] + ", how did you crack the code? Please enter the " +
+               "arithmetical expression you used: ");
             answers[i] = sc.nextLine();
             //Checks the arithmetic of the player's answer
             int playerAnswer = ReadAndCheck(answers[i], totalScore[i]);
@@ -422,7 +425,8 @@ public class FraserCarlineProject{
    
    //The following methods (until the WrapUp method) are all called only by the Numbers game
    
-   //This method is called early in the Numbers method to scramble the order of the numbers in the array. It makes the puzzle more challenging.
+   //This method is called early in the Numbers method to scramble the order of the numbers in the array. 
+   //It makes the puzzle more challenging.
    public static void NumberScramble(int[] nums){
       Random rnd = new Random();
       int numSwaps = rnd.nextInt(20);
@@ -446,7 +450,7 @@ public class FraserCarlineProject{
       int[] ansNums = new int[answer.length()];
       int[] ansOps = new int[answer.length()];
          
-         while(charPos >= 0){          //for each player's answer, runs through their answer string backwards
+         while(charPos >= 0){       //for each player's answer, runs through their answer string backwards
             
             //The first three cases handle the operators, adding them to an array called ansOps         
             if(answer.charAt(charPos) == '+'){
@@ -487,9 +491,11 @@ public class FraserCarlineProject{
                               
                ansHunds = 0; ansTens = 0;
             }
-            //This handles the case where something other than a number of valid operator has been entered. It prompts the user to re-enter their answer. 
+            //This handles the case where something other than a number of valid operator has been entered. 
+            //It prompts the user to re-enter their answer. 
             else{
-               System.out.print("Error: " + answer.charAt(charPos) + " is an invalid character. You won't get any points this round.");
+               System.out.print("Error: " + answer.charAt(charPos) + " is an invalid character. " +
+                  "You won't get any points this round.");
             }
          }
 
@@ -592,17 +598,21 @@ public class FraserCarlineProject{
    
    //This method just prints a whole bunch of text wherein we thank people.
    public static void Credits(){
-      System.out.println("/nCiphermasters was created by Emma Carline and Esther Fraser in partial fulfillment of the requirements of" +
-         "\nDalhousie University's first year Computer Science class. The creators would like to thank Dr. B. McKay" +
-         "\nfor teaching them nearly everything they know about Java so far and inspiring them to learn the rest on" +
-         "\ntheir own. Ciphermasters is based on the TV5 game show Des Chiffres et des Lettres(now with English versions," +
+      System.out.println("/nCiphermasters was created by Emma Carline and Esther Fraser " +
+         "in partial fulfillment of the requirements of" +
+         "\nDalhousie University's first year Computer Science class. " +
+         "The creators would like to thank Dr. B. McKay" +
+         "\nfor teaching them nearly everything they know about Java so far and inspiring them "
+         "to learn the rest on \ntheir own. Ciphermasters is based on the TV5 game show " + 
+         "Des Chiffres et des Lettres (now with English versions," +
          "\nthe BBC's Countdown and ABC's Letters and Numbers. We hope you've enjoyed playing Ciphermasters!");
   }
 
 
    //This method prints the instructions
    public static void Instructions(){
-      JOptionPane.showMessageDialog(null, "In Ciphermasters, you and your friends are code-making and code-breaking secret agents" + 
+      JOptionPane.showMessageDialog(null, "In Ciphermasters, you and your friends are code-making " +
+         "and code-breaking secret agents" + 
          " in a high-stakes race against time." + 
          "\nTake turns hiding top secret information in the lettersgame, then go head-to-head against " +
          "the Computer as you try to break through its security system.");
@@ -619,7 +629,8 @@ public class FraserCarlineProject{
          "\nPlayers add and subtract the building numbers to try to reach the target." +
          "\nWhen the timer runs out, each player enters their solution: the numbers and" +
          " the operations they used to reach the target number."+
-         "\nEach player gets 3 points for getting the target number exactly and 1 point for getting within 10 of the target." +
+         "\nEach player gets 3 points for getting the target number exactly and 1 point " +
+         "for getting within 10 of the target." +
          "\nCareful, in some levels, you might need to subtract!");
    }
 
