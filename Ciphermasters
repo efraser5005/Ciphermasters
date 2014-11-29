@@ -112,7 +112,7 @@ public class FraserCarlineProject{
           String word = JOptionPane.showInputDialog(names[i] +
             ", it's your turn. Please enter a " +
             numLets + "-letter word:");
-         while (word.length()!=numLets){           //word must have correct number of letters
+         while (word.length()!=numLets){           //word must have numLets letters
             word = JOptionPane.showInputDialog("Your word must have " + 
                numLets + " letters. \nPlease try again:");
          }
@@ -224,7 +224,6 @@ public class FraserCarlineProject{
          isTimeUp = true;
          System.out.println("Time is up!");
       }
-      
       return isTimeUp;  
    }
      
@@ -386,12 +385,14 @@ public class FraserCarlineProject{
       }
       //Informs players if subtraction is needed, based on level
       if(level % 4 == 0 || level % 4 == 3){
-         System.out.println("\nTry to crack the code by adding or subtracting" +
-            "these numbers until you reach the target. You can use each number only once.");
+         System.out.println("\nTry to crack the code by adding or subtracting " +
+            "these numbers until you reach the target." +
+            " You can use each number only once.");
       }
       else{
-         System.out.println("\nTry to crack the code by adding some of these numbers until " + 
-            "you reach the target. You can use each number only once.");
+         System.out.println("\nTry to crack the code by adding some of these " +
+            "numbers until you reach the target. " + 
+            "You can use each number only once.");
       }
       System.out.println("The target number is: " + target);
       
@@ -401,13 +402,14 @@ public class FraserCarlineProject{
       
       if(isTimeUp){
          for(int i = 0; i < names.length; i++){
-            System.out.print(names[i] + ", how did you crack the code? Please enter the " +
-               "arithmetical expression you used: ");
+            System.out.print(names[i] + ", how did you crack the code? " +
+               "Please enter the arithmetical expression you used: ");
             answers[i] = sc.nextLine();
             //Checks the arithmetic of the player's answer
             int playerAnswer = ReadAndCheck(answers[i], totalScore[i]);
             
-            //Determine's the player's score based on their answer, then updates the array of total scores.
+            //Determine's the player's score based on their answer, 
+            //then updates the array of total scores.
             int playerScore = ScoreNumbers(names[i], playerAnswer, target);
             totalScore[i] += playerScore;
             gameScore += playerScore;
@@ -416,22 +418,25 @@ public class FraserCarlineProject{
       //levels up, if the players do well enough
       if(gameScore > 3*(names.length - 1)){
          level++;
-         System.out.println("Great work on that code, code-breakers! You've moved up to level " + level);
+         System.out.println("Great work on that code, code-breakers!" + 
+            " You've moved up to level " + level);
       }
       else if(gameScore == 0){
          level--;
-         System.out.println("Let's do some more practice before we tackle this code again, code-breakers." + 
-             "We'll move to level " + level);
+         System.out.println("Let's do some more practice before we tackle" +
+            " this code again, code-breakers. We'll move to level " + level);
       }
       
       return level;
       
    }//end Numbers method
    
-   //The following methods (until the WrapUp method) are all called only by the Numbers game
+   /*The following methods (until the WrapUp method) 
+   are all called only by the Numbers game
    
-   //This method is called early in the Numbers method to scramble the order of the numbers in the array. 
-   //It makes the puzzle more challenging.
+   This method is called early in the Numbers method 
+   to scramble the order of the numbers in the array. 
+   It makes the puzzle more challenging.*/
    public static void NumberScramble(int[] nums){
       Random rnd = new Random();
       int numSwaps = rnd.nextInt(20);
@@ -447,7 +452,8 @@ public class FraserCarlineProject{
       }
    }//end NumberScramble method
 
-   //This method reads the player's answer and checks their arithmetic. It's called by the Numbers method.
+   //This method reads the player's answer and checks their arithmetic. 
+   //It's called by the Numbers method.
    public static int ReadAndCheck(String answer, int score){
       Scanner sc = new Scanner(System.in);
       
@@ -455,9 +461,11 @@ public class FraserCarlineProject{
       int[] ansNums = new int[answer.length()];
       int[] ansOps = new int[answer.length()];
          
-         while(charPos >= 0){       //for each player's answer, runs through their answer string backwards
+         while(charPos >= 0){       //for each player's answer, runs through their 
+                                    //answer string backwards
             
-            //The first three cases handle the operators, adding them to an array called ansOps         
+            //The first three cases handle the operators, adding them to an array 
+            //called ansOps         
             if(answer.charAt(charPos) == '+'){
                ansOps[charPos] = 1;
                charPos--;
@@ -470,7 +478,8 @@ public class FraserCarlineProject{
             else if(Character.isDigit(answer.charAt(charPos))){
                int ansHunds = 0, ansTens = 0, ansUnits = 0;
                
-               //These two nested "if"s handle the cases where the number is 2 or 3 digits long
+               //These two nested "if"s handle the cases where the number is 
+               //2 or 3 digits long
                if(charPos > 0 && Character.isDigit(answer.charAt(charPos-1))){
                   
                   if(charPos > 1 && Character.isDigit(answer.charAt(charPos-2))){
@@ -483,7 +492,8 @@ public class FraserCarlineProject{
                ansUnits = Character.getNumericValue(answer.charAt(charPos));
                
                ansNums[charPos] = ansHunds * 100 + ansTens * 10 + ansUnits;
-               //These "if"s move the charPos to avoid double-counting 2- and 3- digit numbers
+               //These "if"s move the charPos to avoid double-counting 
+               //2- and 3- digit numbers
                if(ansHunds != 0){
                   charPos -=3;
                }
@@ -496,11 +506,12 @@ public class FraserCarlineProject{
                               
                ansHunds = 0; ansTens = 0;
             }
-            //This handles the case where something other than a number of valid operator has been entered. 
-            //It prompts the user to re-enter their answer. 
+            /*This handles the case where something other than a number of valid 
+            operator has been entered. The user will get no points for the round*/ 
             else{
-               System.out.print("Error: " + answer.charAt(charPos) + " is an invalid character. " +
-                  "You won't get any points this round.");
+               System.out.print("Error: " + answer.charAt(charPos) + 
+               " is an invalid character. " +
+               "You won't get any points this round.");
             }
          }
 
@@ -558,14 +569,17 @@ public class FraserCarlineProject{
       
       if(answer == target){
          gameScore = 3;
-         System.out.println("Great work, " + name + ", you cracked the code! You get 3 points.");
+         System.out.println("Great work, " + name + ", you cracked the code!" +
+                  " You get 3 points.");
       }
       else if(answer > (target - 10) && answer < (target + 10)){
          gameScore = 1;
-         System.out.println("Not bad, " + name + ", you nearly got it. You get 1 point.");
+         System.out.println("Not bad, " + name + ", you nearly got it." +
+                  " You get 1 point.");
       }
       else{
-         System.out.println("You didn't manage to crack the code. You'll do better next time.");
+         System.out.println("You didn't manage to crack the code." +
+                  " You'll do better next time.");
       }
       
       return gameScore;
@@ -573,7 +587,7 @@ public class FraserCarlineProject{
 
    
    //This method is called when the players choose to end the game. 
-         //It prints every player's score and determines and congratulates the winner(s).
+   //It prints every player's score and determines and congratulates the winner(s).
    public static void WrapUp(String[] names, int[] totalScore){
       System.out.println("Good game, code-breakers! Here are your final socres: ");
       //This section finds the winner
@@ -587,7 +601,8 @@ public class FraserCarlineProject{
       }
       //This section tells each player their socre
       for(int i = 0; i < names.length; i++){
-         System.out.println(names[i] + ", you scored " + totalScore[i] + " points.");
+         System.out.println(names[i] + ", you scored " + totalScore[i] + 
+                  " points.");
       }
       //This section congratulates the winner(s)
       System.out.print("Congratulations ");
@@ -603,39 +618,45 @@ public class FraserCarlineProject{
    
    //This method just prints a whole bunch of text wherein we thank people.
    public static void Credits(){
-      System.out.println("/nCiphermasters was created by Emma Carline and Esther Fraser " +
-         "in partial fulfillment of the requirements of" +
+      System.out.println("\nCiphermasters was created by Emma Carline" +
+         " and Esther Fraser in partial fulfillment of the requirements of" +
          "\nDalhousie University's first year Computer Science class. " +
          "The creators would like to thank Dr. B. McKay" +
-         "\nfor teaching them nearly everything they know about Java so far and inspiring them " +
-         "to learn the rest on \ntheir own. Ciphermasters is based on the TV5 game show " + 
-         "Des Chiffres et des Lettres (now with English versions," +
-         "\nthe BBC's Countdown and ABC's Letters and Numbers. We hope you've enjoyed playing Ciphermasters!");
+         "\nfor teaching them nearly everything they know about Java" +
+         " so far and inspiring them " +
+         "to learn the rest on \ntheir own. Ciphermasters is based on the TV5" + 
+         " game show Des Chiffres et des Lettres (now with English versions," +
+         "\nthe BBC's Countdown and ABC's Letters and Numbers. "+
+         "\nWe hope you've enjoyed playing Ciphermasters!");
   }
 
 
    //This method prints the instructions
    public static void Instructions(){
-      JOptionPane.showMessageDialog(null, "In Ciphermasters, you and your friends are code-making " +
-         "and code-breaking secret agents" + 
-         " in a high-stakes race against time." + 
-         "\nTake turns hiding top secret information in the lettersgame, then go head-to-head against " +
-         "the Computer as you try to break through its security system.");
-      JOptionPane.showMessageDialog(null, "In the letters game, one player will enter a word." + 
+      JOptionPane.showMessageDialog(null, "In Ciphermasters, you and your friends" +
+         " are code-making and code-breaking secret agents in a high-stakes race" +
+         " against time." + 
+         "\nTake turns hiding top secret information in the lettersgame, then go" +
+         " head-to-head against the Computer as you try to break" +
+         " through its security system.");
+      JOptionPane.showMessageDialog(null, "In the letters game, one player will" +
+         " enter a word." + 
          "\n(This is top-secret! Don't let the other players see it!) " +
-         "\nThen everyone will be shown a scrambled version of this word, called an anagram. " +
+         "\nThen everyone will be shown a scrambled version of this word," +
+         " called an anagram. " +
          "\nUnscramble the anagram before time runs out." +  
          "\nEach player will then enter their guess." + 
          "\nThe game ends when each player has had a turn choosing the anagram." +
          "\nOne point is given for each word correctly unscrambled. " +
-         "\nAs the levels get harder, the anagrams will get longer and you'll have less time to decode them!");
-      JOptionPane.showMessageDialog(null, "In the numbers game, all players are shown six" +
-         " 'building' numbers and a target number."+
-         "\nPlayers add and subtract the building numbers to try to reach the target." +
-         "\nWhen the timer runs out, each player enters their solution: the numbers and" +
-         " the operations they used to reach the target number."+
-         "\nEach player gets 3 points for getting the target number exactly and 1 point " +
-         "for getting within 10 of the target." +
+         "\nAs the levels get harder, the anagrams will get longer and you'll" +
+         " have less time to decode them!");
+      JOptionPane.showMessageDialog(null, "In the numbers game, all players " +
+         "are shown six 'building' numbers and a target number."+
+         "\nPlayers add and subtract the building numbers to reach the target." +
+         "\nWhen the timer runs out, each player enters their solution: the " +
+         "numbers and the operations they used to reach the target number."+
+         "\nEach player gets 3 points for getting the target number exactly and" +
+         " 1 point for getting within 10 of the target." +
          "\nCareful, in some levels, you might need to subtract!");
    }
 
