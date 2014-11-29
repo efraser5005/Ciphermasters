@@ -608,7 +608,7 @@ public class FraserCarlineProject{
          "in partial fulfillment of the requirements of" +
          "\nDalhousie University's first year Computer Science class. " +
          "The creators would like to thank Dr. B. McKay" +
-         "\nfor teaching them nearly everything they know about Java so far and inspiring them "
+         "\nfor teaching them nearly everything they know about Java so far and inspiring them " +
          "to learn the rest on \ntheir own. Ciphermasters is based on the TV5 game show " + 
          "Des Chiffres et des Lettres (now with English versions," +
          "\nthe BBC's Countdown and ABC's Letters and Numbers. We hope you've enjoyed playing Ciphermasters!");
