@@ -39,8 +39,8 @@ public class FraserCarlineProject{
  
    }
    
-   /*This method controls the flow of the game. It calls one of the Letters game, Numbers game,
-         the Instructions method or the end-game (WrapUp) method */
+   /*This method controls the flow of the game. It calls one of the Letters game, 
+   Numbers game,the Instructions method or the end-game (WrapUp) method */
    public static void ChooseGame(int[] totalScore, String[] names){
       
       Scanner sc = new Scanner(System.in);
@@ -58,7 +58,8 @@ public class FraserCarlineProject{
          String chooser = names[WhoChooses(totalScore)];
          
          System.out.print(chooser + ", which game would you like to play?" + 
-               "\nEnter 1 for a letters code, 2 for a numbers code, 3 to read instructions and 0 to exit the game. ");
+               "\nEnter 1 for a letters code, 2 for a numbers code, 3 to read" + 
+               " instructions and 0 to exit the game. ");
          int choice = sc.nextInt();
          
          if(choice == 1){
@@ -77,14 +78,16 @@ public class FraserCarlineProject{
             WrapUp(names, totalScore);
          }
          else{
-            System.out.println("I'm sorry. I don't recognize that command. Please enter 1 for the letters code, 2 for the numbers code, 3 to read instructions or 0 to exit the game. ");
+            System.out.println("I'm sorry. I don't recognize that command." + 
+            " Please enter 1 for the letters code, 2 for the numbers code," +
+            " 3 to read instructions or 0 to exit the game. ");
          }
       }
             
    }//end ChooseGame method
    
-   //This method plays the Letters game
-   //note: Method returns the score of a single game; Moving up a level does not happen within this method.
+   /*This method plays the Letters game note: Method returns the score of a single
+     game; Moving up a level does not happen within this method.*/
    public static int[] Letters(int [] totalScore, int level, String[] names){
       
       Scanner kb = new Scanner(System.in);
@@ -126,18 +129,19 @@ public class FraserCarlineProject{
                   if (ans.equals(word)){
                      gameScore[inputOrder[m]]++;
                   }
-                  System.out.println("Score of " + names[m] + " is " + gameScore[m]);
+                  System.out.println("Score of " + names[m] + " is " 
+                     + gameScore[m]);
                }
             }
          }
          if (i+1!=names.length){
-            JOptionPane.showMessageDialog(null,"This round is finished. Get ready " + names[i+1] + 
-            " to enter a word to be scrambled!");
+            JOptionPane.showMessageDialog(null,"This round is finished." +
+            " Get ready " + names[i+1] + " to enter a word to be scrambled!");
          }
          //Prints everyone's scores at end of game.
          else {
-            JOptionPane.showMessageDialog(null,"This game is finished. The scores are:\n" + 
-               printArrList(gameScore, names)); 
+            JOptionPane.showMessageDialog(null,"This game is finished." +
+            " The scores are:\n" + printArrList(gameScore, names)); 
          }
          //Updates totalScore.
          for (int h=0; h<gameScore.length; h++){
@@ -147,10 +151,10 @@ public class FraserCarlineProject{
       return gameScore; 
    }
    
-   //Is word only letters method
-   //Checks that entered word is only letters
-   //If not, gets user to enter another word
-   //Continues until a word is entered that only contains letters
+   /*Is word only letters method
+   Checks that entered word is only letters
+   If not, gets user to enter another word
+   Continues until a word is entered that only contains letters*/
    public static String areAllLetts(String word){  
       Scanner kb = new Scanner(System.in);
       boolean nonLet = true;
@@ -160,7 +164,8 @@ public class FraserCarlineProject{
             if (Character.isLetter(word.charAt(m))==false)
                nonLet=true;
          if (nonLet == true)
-            word = JOptionPane.showInputDialog("You must enter a word. \nTry again:"); 
+            word = JOptionPane.showInputDialog("You must enter a word." +
+            " \nTry again:"); 
       }
       return word;
    }
@@ -192,9 +197,9 @@ public class FraserCarlineProject{
       return scrambled;
    }
    
-   //This is the Timer. 
-   //The amount of time allowed depends on which game is being played and the level.
-   //returns true, after the amount of time has passed.
+   /*This is the Timer. 
+   The amount of time allowed depends on which game is being played and the 
+   level. Returns the boolean value true, after the amount of time has passed*/
    public static boolean Timer(String game, int level){ 
       boolean isTimeUp = false;
       
@@ -224,9 +229,9 @@ public class FraserCarlineProject{
       return isTimeUp;  
    }
      
-   //Random Player order method
-   //Creates array with numbers from 1 to numPlayers
-   //Shuffles the elements and returns the array
+   /*Random Player order method
+   Creates array with numbers from 1 to numPlayers
+   Shuffles the elements and returns the array*/
    public static int[] RandPlayerOrder(int numPlayers){
       int [] playArr = new int[numPlayers];
       for (int i=0; i < numPlayers; i++)
@@ -253,8 +258,9 @@ public class FraserCarlineProject{
       return scoreList;
    }
    
-  // Who chooses next game method
-  //Gives the index in names[] of the person who gets to choose which type of game is played next
+   /*Who chooses next game method
+   Gives the index in names[] of the person who gets to
+   choose which type of game is played next*/
    public static int WhoChooses(int [] score){
       int count = 0;
       int min = score[0];
@@ -290,8 +296,8 @@ public class FraserCarlineProject{
       return who;
    }
    
-   //LevelUp method (for Letters)
-   //Level increases if more than 80% of the players guess 
+   /*LevelUp method (for Letters)
+   Level increases if more than 80% of the players guess*/ 
    public static int LevelUp(int [] gameScore){
       int level = 0;
       double average = 0;
