@@ -21,6 +21,8 @@ public class Ciphermasters{
    
       Scanner sc = new Scanner(System.in);
       
+      Instructions();
+      
       System.out.print("How many Ciphermasters are playing today? ");
       int numPlayers = sc.nextInt();
       String[] names = new String[numPlayers];
@@ -69,20 +71,10 @@ public class Ciphermasters{
          }
          else if(choice ==2){
             System.out.println("You have chosen the numbers game!");
-            Numbers();
+            numbLev = Numbers(numbLev, names, totalScore);
          }
          else if(choice == 3){
-            System.out.println("In Ciphermasters, you and your friends are code-making and code-breaking secret agents");
-            System.out.println("in a high-stakes race against time. Take turns hiding top secret information in the letters");
-            System.out.println("game, then go head-to-head against the Computer as you try to break through its security system.");
-            System.out.println("\nIn the letters game, one player will enter a word. (This is top-secret! Don't let the other players");
-            System.out.println("see it!) Then each other player will be shown a scrambled version. Unscramble it before time runs");
-            System.out.println("out. Then the next player will enter a word and each other player will guess. The game ends when");
-            System.out.println("each player has had a turn entering a word. One point is given for each word correctly unscrambled.");
-            System.out.println("\nIn the numbers game, all players are shown six 'building' numbers and a target number. Players");
-            System.out.println("add and subtract the building numbers to try to reach the target. When time's up, each player enters");
-            System.out.println("their solution, the numbers and the operations they used to reach the target number. Players get 3");
-            System.out.println("points for getting straight to the target number and 1 point for getting within 10 of the target."); 
+            Instructions();   
          }
          else if(choice == 0){
             again = false;
@@ -105,7 +97,7 @@ public class Ciphermasters{
    }//end Letters method
    
    //This method plays the Numbers game
-   public static void Numbers(int level, String[] names, int[] totalScore){
+   public static int Numbers(int level, String[] names, int[] totalScore){
             
       int numSmall = 0, numLarge = 0;
       int[] larges = {25, 50, 75, 100};
@@ -114,13 +106,13 @@ public class Ciphermasters{
       Scanner sc = new Scanner(System.in);
       
       //Sets number of small numbers by level
-      if(level == 1){
+      if(level % 3 == 1){
          numSmall = 2;
       }
-      else if(level == 2){
+      else if(level % 3 == 2){
          numSmall = 3;
       }
-      else if(level == 3){
+      else if(level % 3 == 3){
          numSmall = 4;
       }
       else{
@@ -185,6 +177,13 @@ public class Ciphermasters{
          int playerScore = ScoreNumbers(names[i], playerAnswer, target);
          totalScore[i] += playerScore;
       }
+      
+      //levels up, if the players do well enough
+      if(gameScore > 3*(names.length - 1) + 1){
+         level++;
+      }
+      
+      return level;
       
    }//end Numbers method
    
@@ -390,6 +389,23 @@ public class Ciphermasters{
       System.out.println("their own. Ciphermasters is based on the TV5 game show Des Chiffres et des Lettres(now with English versions,");
       System.out.println("the BBC's Countdown and ABC's Letters and Numbers. We hope you've enjoyed playing Ciphermasters!");
   }
+
+
+   //This method prints the instructions
+   public static void Instructions(){
+      System.out.println("In Ciphermasters, you and your friends are code-making and code-breaking secret agents" + 
+         "\nin a high-stakes race against time. Take turns hiding top secret information in the letters" +
+         "\ngame, then go head-to-head against the Computer as you try to break through its security system." +
+         "\n\tIn the letters game, one player will enter a word. (This is top-secret! Don't let the other players" +
+         "\nsee it!) Then each other player will be shown a scrambled version. Unscramble it before time runs" +
+         "\nout. Then the next player will enter a word and each other player will guess. The game ends when" +
+         "\neach player has had a turn entering a word. One point is given for each word correctly unscrambled." +
+         "\n\tIn the numbers game, all players are shown six 'building' numbers and a target number. Players" +
+         "\nadd and subtract the building numbers to try to reach the target. When time's up, each player enters" +
+         "\ntheir solution, the numbers and the operations they used to reach the target number. Players get 3" +
+         "\npoints for getting straight to the target number and 1 point for getting within 10 of the target." +
+         "\nCareful, in some levels, you might need to subtract!");
+   }
 
    
 }//end class
