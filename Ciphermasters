@@ -13,7 +13,7 @@ public class FraserCarlineProject{
    }//end main method
    
    //This method contains the entire game of Ciphermasters.
-   public static void StartUp(){
+   public static void Ciphermasters(){
    
       Scanner sc = new Scanner(System.in);
       
