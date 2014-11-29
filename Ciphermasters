@@ -8,16 +8,12 @@ import javax.swing.JOptionPane;
 public class Ciphermasters{
    public static void main(String[] args){
       
-      int[] totalScore = StartUp();
-      
-      
-      for(int i = 0; i < totalScore.length; i++){
-         System.out.print("Player " + (i + 1) + "'s score is: " + totalScore[i]);
-      }
+      StartUp();
+
    }//end main method
    
    //This method initializes a bunch of stuff for the game
-   public static int[] StartUp(){
+   public static void StartUp(){
    
       Scanner sc = new Scanner(System.in);
       
@@ -34,50 +30,38 @@ public class Ciphermasters{
          names[i] = sc.next();
       }
       
-      for(int i = 0; i < numPlayers; i++){
-         System.out.print(names[i] + ", ");
-      }
-      
-      System.out.println();
-
-      /*This is for testing that score updating is working properly
-      for(int i = 0; i < numPlayers; i++){
-         System.out.print("Player " + (i+1) + "'s score is: " + totalScore[i]);
-      }*/
-      
-      ChooseGame(totalScore, level);
-      
-      /* This is for testing that score updating is working properly
-      for(int i = 0; i < numPlayers; i++){
-         System.out.print("Player " + (i+1) + "'s score is: " + totalScore[i]);
-      }*/
-
-      return totalScore;   
+      ChooseGame(totalScore, names);
+ 
    }
    
-   //This method prompts the players to choose which game to play and starts that game
+   //This method controls the flow of the game. It calls one of the Letters game, Numbers game,
+         //the Instructions method or the end-game (WrapUp) method 
    public static void ChooseGame(int[] totalScore, String[] names){
       
       Scanner sc = new Scanner(System.in);
       boolean again = true;
       
-      int lettLev = 1;
-      int numbLev = 1;
+      int lettLev = 1, numbLev = 1;
+      
+      System.out.print("At what level would you like to start the letters code? ");
+      lettLev = sc.nextInt();
+      System.out.print("At what level would youl ike to start the numbers code? ");
+      numbLev = sc.nextInt();
    
       while(again == true){
       
          String chooser = names[WhoChooses(totalScore)];
          
          System.out.print(chooser + ", which game would you like to play?" + 
-               "/nEnter 1 for the letters game, 2 for the numbers game, 3 to read instructions and 0 to exit the game. ");
+               "\nEnter 1 for a letters code, 2 for a numbers code, 3 to read instructions and 0 to exit the game. ");
          int choice = sc.nextInt();
          
          if(choice == 1){
-            System.out.println("You have chosen the letters game!");
-            lettLev = LevelUp(Letters(totaScore,lettLev,names);
+            System.out.println("You have chosen the letters code!");
+            lettLev += LevelUp(Letters(totalScore,lettLev,names));
          }
-         else if(choice ==2){
-            System.out.println("You have chosen the numbers game!");
+         else if(choice == 2){
+            System.out.println("You have chosen the numbers code!");
             numbLev = Numbers(numbLev, names, totalScore);
          }
          else if(choice == 3){
@@ -85,21 +69,22 @@ public class Ciphermasters{
          }
          else if(choice == 0){
             again = false;
-            WrapUp();
+            WrapUp(names, totalScore);
          }
          else{
-            System.out.println("I'm sorry. I don't recognize that command. Please enter 1 for the letters game, 2 for the numbers game, 3 to read instructions or 0 to exit the game. ");
+            System.out.println("I'm sorry. I don't recognize that command. Please enter 1 for the letters code, 2 for the numbers code, 3 to read instructions or 0 to exit the game. ");
          }
       }
-   
+            
    }//end ChooseGame method
    
+   //This method plays the Letters game
    public static int[] Letters(int [] totalScore, int level, String[] names){
       
       Scanner kb = new Scanner(System.in);
+      boolean isTimeUp;
       int [] gameScore = new int[names.length];
       for (int i=0; i<names.length; i++){
-         int time = 60 - 15*((level-1)%3);
          int numLets;
          if (level < 10)
             numLets = level/3 + 2;
@@ -113,18 +98,19 @@ public class Ciphermasters{
                numLets + " letters. \nPlease try again:");
          word = areAllLetts(word);
          String drow = Scramble(word);
-         System.out.println("Okay everyone. The anagram is: " + drow + 
-            "\nYou have " + time + " seconds to unscramble the word."); 
-         Timer("letters",level);
+         System.out.println("Okay everyone. The anagram is: " + drow); 
+         isTimeUp = Timer("letters",level);
          int [] inputOrder = RandPlayerOrder(names.length);
-         for (int m=0; m<names.length; m++){
-            if (inputOrder[m]!= i){
-               String ans = JOptionPane.showInputDialog(names[inputOrder[m]]+
-                  ", please enter your answer:");
-               if (ans.equals(word)){
-                  gameScore[inputOrder[m]]++;
+         if(isTimeUp){
+            for (int m=0; m<names.length; m++){
+               if (inputOrder[m]!= i){
+                  String ans = JOptionPane.showInputDialog(names[inputOrder[m]]+
+                     ", please enter your answer:");
+                  if (ans.equals(word)){
+                     gameScore[inputOrder[m]]++;
+                  }
+                  System.out.println("Score of " + names[m] + " is " + gameScore[m]);
                }
-               System.out.println("Score of " + names[m] + " is " + gameScore[m]);
             }
          }
          if (i+1!=names.length){
@@ -135,8 +121,9 @@ public class Ciphermasters{
             JOptionPane.showMessageDialog(null,"This game is finished. The scores are:\n" + 
                printArrList(gameScore, names)); 
          }
-         for (int h=0; h<gamesScore.length; h++){
+         for (int h=0; h<gameScore.length; h++){
             totalScore[h] += gameScore[h];
+         }
       }
       return gameScore; 
    }
@@ -185,23 +172,34 @@ public class Ciphermasters{
       return scrambled;
    }
    
-   //Timer method 
-   //Amount of counting depends on which game and level
-      public static void Timer(String game, int level){ 
+   //This is the Timer. Playtime allowed depends on game and level.
+   public static boolean Timer(String game, int level){ 
+      boolean isTimeUp = false;
+      
       int playtime = 0; 
-      int [] letlev = {60, 45, 30};
-      int []numblev = {70,60,50,40,30};
-      if (game.equals("letters")) 
+      int [] letlev = {30, 60, 40};
+      int [] numblev = {40, 80, 60, 60};
+      
+      if(game.equals("letters")){ 
          playtime = letlev[(level)%3];
-      else if (game.equals("numbers"));
-         playtime = numblev[(level)%5]; 
+      }
+      else if(game.equals("numbers")){
+         playtime = numblev[(level)%4];
+      }
+      
+      System.out.println("You have " + playtime + " seconds. Ready...set...GO!"); 
       long start = System.currentTimeMillis();
       long i=0;
-      while (i <= start+30000){
+      int counter = 0;
+      while (i <= start + playtime * 1000){
          i=System.currentTimeMillis();
-         i++;
       }
-      System.out.println("Time is up!");  
+      if(i == 1 + start + playtime * 1000){
+         isTimeUp = true;
+         System.out.println("Time is up!");
+      }
+      
+      return isTimeUp;  
    }
      
      //Random Player order method
@@ -240,8 +238,9 @@ public class Ciphermasters{
       int min = score[0];
       
       for(int i = 0; i < score.length; i++){
-         if(socre[i] < min){
+         if(score[i] < min){
             min = score[i];
+         }
       }
       
       for (int j=0; j<score.length; j++){
@@ -273,17 +272,21 @@ public class Ciphermasters{
       }
       percentRight = sumScores/gameScore.length;
       if (percentRight > 0.8){
+         System.out.println("Great work with those anagrams, code-breakers! Let's move to the next level!");
          level = 1;
+      }
+      else if(sumScores <= gameScore.length){
+         System.out.println("Let's try some more practice anagrams, code-breakers, before tackling a code this tough again.");
+         level = -1;
       }
       return level;
    }
-
-
-   
    
    //This method plays the Numbers game
    public static int Numbers(int level, String[] names, int[] totalScore){
-            
+      
+      int gameScore = 0; 
+      boolean isTimeUp;     
       int numSmall = 0, numLarge = 0;
       int[] larges = {25, 50, 75, 100};
       
@@ -291,20 +294,20 @@ public class Ciphermasters{
       Scanner sc = new Scanner(System.in);
       
       //Sets number of small numbers by level
-      if(level % 3 == 1){
+      if(level < 5){
          numSmall = 2;
       }
-      else if(level % 3 == 2){
+      else if(level < 10){
          numSmall = 3;
       }
-      else if(level % 3 == 3){
+      else if(level < 15){
          numSmall = 4;
       }
-      else{
-         System.out.println("Esther, you've screwed it up! The level is set to something other than 1, 2 or 3. How did that happen?");
+      else if(level < 20){
+         numSmall = 5;
       }
       
-      int[] numbers = new int[6];
+      int[] numbers = new int[(level+23)/4];
       
       System.out.print("The numbers are: ");
       
@@ -314,7 +317,7 @@ public class Ciphermasters{
          System.out.print(numbers[i] + " ");
       }
       
-      for(int i = numSmall; i < 6; i++){
+      for(int i = numSmall; i < numbers.length; i++){
          numbers[i] = larges[rnd.nextInt(4)];
          System.out.print(numbers[i] + " ");
       }
@@ -327,52 +330,61 @@ public class Ciphermasters{
       int target = 0;
       
       for(int i = 0; i < 5; i++){
-         operations[i] = rnd.nextInt(4) + 1;
+         operations[i] = rnd.nextInt(3) + 1;
          if(operations[i] == 1){
             target += numbers[i];
-            //System.out.println("The number is: " + numbers[i] + ". The operation is: + . The target is now: " + target);
          }
-         else if(operations[i] == 2){
-            if(target > numbers[i]){ //This ensures target stays positive
+         else if(operations[i] == 2 && (level % 4 == 0 || level % 4 == 3)){
+            if(target > numbers[i]){      //This ensures target stays positive
                target -= numbers[i];
-               //System.out.println("The number is: " + numbers[i] + ". The operation is: - . The target is now: " + target);
             }
             else{
                target += numbers[i];
-               //System.out.println("The number is: " + numbers[i] + ". The operation is: +. The target is now: " + target);
             }
          }
       }
-      
+      //Informs players if subtraction is needed, based on level
+      if(level % 4 == 0 || level % 4 == 3){
+         System.out.println("\nTry to crack the code by adding or subtracting these numbers until you reach the target. You can use each number only once.");
+      }
+      else{
+         System.out.println("\nTry to crack the code by adding some of these numbers until you reach the target. You can use each number only once.");
+      }
       System.out.println("The target number is: " + target);
       
-      System.out.println("Time's up!"); //This is in place of the timer method for now
+      isTimeUp = Timer("numbers", level);
       
       String[] answers = new String[names.length];
       
-      for(int i = 0; i < names.length; i++){
-         System.out.print(names[i] + ", how did you crack the code? Please enter the arithmetical expression you used: ");
-         answers[i] = sc.nextLine();
-         //Checks the arithmetic of the player's answer
-         int playerAnswer = ReadAndCheck(answers[i], totalScore[i]);
-         //System.out.println("The player's answer is " + playerAnswer);
-         //System.out.println("The target number is " + target);
-         
-         //Determine's the player's score based on their answer, then updates the array of total scores.
-         int playerScore = ScoreNumbers(names[i], playerAnswer, target);
-         totalScore[i] += playerScore;
-      }
-      
+      if(isTimeUp){
+         for(int i = 0; i < names.length; i++){
+            System.out.print(names[i] + ", how did you crack the code? Please enter the arithmetical expression you used: ");
+            answers[i] = sc.nextLine();
+            //Checks the arithmetic of the player's answer
+            int playerAnswer = ReadAndCheck(answers[i], totalScore[i]);
+            
+            //Determine's the player's score based on their answer, then updates the array of total scores.
+            int playerScore = ScoreNumbers(names[i], playerAnswer, target);
+            totalScore[i] += playerScore;
+            gameScore += playerScore;
+         }
+      }      
       //levels up, if the players do well enough
-      if(gameScore > 3*(names.length - 1) + 1){
+      if(gameScore > 3*(names.length - 1)){
          level++;
+         System.out.println("Great work on that code, code-breakres! You've moved up to level " + level);
+      }
+      else if(gameScore == 0){
+         level--;
+         System.out.println("Let's do some more practice before we tackle this code again, code-breakers." + 
+             "We'll move to level " + level);
       }
       
       return level;
       
    }//end Numbers method
    
-   //The following methods (until the WrapUp method) are all called by the Numbers game
+   //The following methods (until the WrapUp method) are all called only by the Numbers game
    
    //This method is called early in the Numbers method to scramble the order of the numbers in the array. It makes the puzzle more challenging.
    public static void NumberScramble(int[] nums){
@@ -392,6 +404,8 @@ public class Ciphermasters{
 
    //This method reads the player's answer and checks their arithmetic. It's called by the Numbers method.
    public static int ReadAndCheck(String answer, int score){
+      Scanner sc = new Scanner(System.in);
+      
       int charPos = answer.length() - 1;
       int[] ansNums = new int[answer.length()];
       int[] ansOps = new int[answer.length()];
@@ -405,10 +419,6 @@ public class Ciphermasters{
             }
             else if(answer.charAt(charPos) == '-'){
                ansOps[charPos] = 2;
-               charPos--;
-            }
-            else if(answer.charAt(charPos) == '*'){
-               ansOps[charPos] = 3;
                charPos--;
             }
             //This case handles the numbers
@@ -428,7 +438,6 @@ public class Ciphermasters{
                ansUnits = Character.getNumericValue(answer.charAt(charPos));
                
                ansNums[charPos] = ansHunds * 100 + ansTens * 10 + ansUnits;
-               //System.out.println("ansHunds = " + ansHunds + ", ansTens = " + ansTens + ", ansUnits = " + ansUnits + ", ansNums["+(charPos+1)+"] = " + ansNums[(charPos+1)]);
                //These "if"s move the charPos to avoid double-counting 2- and 3- digit numbers
                if(ansHunds != 0){
                   charPos -=3;
@@ -443,9 +452,9 @@ public class Ciphermasters{
                ansHunds = 0; ansTens = 0;
             }
             //This handles the case where something other than a number of valid operator has been entered. It prompts the user to re-enter their answer. 
-            //else{
-            //   System.out.print("Error: " + names[i] + " " + answers[i].charAt(charPos) + " is an invalid character. Remember not to put any spaces! Try entering it again: ");
-            //   answers[i] = sc.nextLine();
+            else{
+               System.out.print("Error: " + answer.charAt(charPos) + " is an invalid character. You won't get any points this round.");
+            }
          }
 
       int total = ansNums[0];
@@ -464,57 +473,35 @@ public class Ciphermasters{
             }
          }
       } 
-     
-      //System.out.println("The total is " + total + ", and the index is " + counterNums);
 
       while(counterOps < ansOps.length){
          
          while(counterNums < ansNums.length && counterOps < ansOps.length){
             
-            if(ansNums[counterNums] == 0){
+            if(ansNums[counterNums] == 0){ //advances the counter past "0" entries
                counterNums++;
-               //System.out.println("Nums counter is " + counterNums + ", nextNum is " + nextNum + ", the Ops counter is " + counterOps + ", the total is " + total);
             }
             else{
                nextNum = ansNums[counterNums];
-               //System.out.println("Nums counter is " + counterNums + " and nextNum is " + nextNum + ". The Ops counter is " + counterOps + ", the total is " + total);
-
+            
                if(ansOps[counterOps] == 0){
                   counterOps++;
-                  //System.out.println("Nums counter is " + counterNums + ", nextNum is " + nextNum + ", the Ops counter is " + counterOps +  ", the total is " + total);
-               }
+               }               
                else if(ansOps[counterOps] == 1 ){
                   total += nextNum;
                   counterNums++;                 
                   counterOps++;
-                  //System.out.println("Nums counter is " + counterNums + ", nextNum is " + nextNum + ", the Ops counter is " + counterOps + ", the total is " + total);
                }  
                else if(ansOps[counterOps] == 2){
                   total -= nextNum;
                   counterNums++;
                   counterOps++;
-                  //System.out.println("Nums counter is " + counterNums + ", nextNum is " + nextNum + ", the Ops counter is " + counterOps + ", the total is " + total);
                }
-               //else if(ansOps[counterOps] == 3){
-                  //total = total * nextNum;
-                  //counterNums++;
-                  //counterOps++;
-               //}
-               else{
-                  //System.out.println("There's something wacky in your ansOps array here: counterOps = " + counterOps + ", counterNums = " + counterNums);// + ", ansOps here is " + ansOps[counterOps] + ", and ansNums here is " + ansNums[counterNums]);
-                  counterOps++;
-                  counterNums++;
-               }
-                  
-               //System.out.println("The total is now " + total);
-               //System.out.println("The Ops counter is: " + counterOps + ", and the Nums counter is: " + counterNums);
-               
             }
          }
          counterOps++;
+      
       }
-      //System.out.println("The total is: " + total);
-      //System.out.println("The add method is about to end.");
       return total;
    }//ends ReadAndAdd method
    
@@ -538,9 +525,10 @@ public class Ciphermasters{
    }//ends the ScoreNumbers method
 
    
-   //This method is called when the players choose to end the game. It prints every player's score and determines and congratulates the winner(s).
+   //This method is called when the players choose to end the game. 
+         //It prints every player's score and determines and congratulates the winner(s).
    public static void WrapUp(String[] names, int[] totalScore){
-      
+      System.out.println("Good game, code-breakers! Here are your final socres: ");
       //This section finds the winner
       int max = totalScore[0];
       String[] winner = new String[names.length];
@@ -568,27 +556,34 @@ public class Ciphermasters{
    
    //This method just prints a whole bunch of text wherein we thank people.
    public static void Credits(){
-      System.out.println("Ciphermasters was created by Emma Carline and Esther Fraser in partial fulfillment of the requirements of");
-      System.out.println("Dalhousie University's first year Computer Science class. The creators would like to thank Dr. B. McKay");
-      System.out.println("for teaching them nearly everything they know about Java so far and inspiring them to learn the rest on");
-      System.out.println("their own. Ciphermasters is based on the TV5 game show Des Chiffres et des Lettres(now with English versions,");
-      System.out.println("the BBC's Countdown and ABC's Letters and Numbers. We hope you've enjoyed playing Ciphermasters!");
+      System.out.println("/nCiphermasters was created by Emma Carline and Esther Fraser in partial fulfillment of the requirements of" +
+         "\nDalhousie University's first year Computer Science class. The creators would like to thank Dr. B. McKay" +
+         "\nfor teaching them nearly everything they know about Java so far and inspiring them to learn the rest on" +
+         "\ntheir own. Ciphermasters is based on the TV5 game show Des Chiffres et des Lettres(now with English versions," +
+         "\nthe BBC's Countdown and ABC's Letters and Numbers. We hope you've enjoyed playing Ciphermasters!");
   }
 
 
    //This method prints the instructions
    public static void Instructions(){
-      System.out.println("In Ciphermasters, you and your friends are code-making and code-breaking secret agents" + 
-         "\nin a high-stakes race against time. Take turns hiding top secret information in the letters" +
-         "\ngame, then go head-to-head against the Computer as you try to break through its security system." +
-         "\n\tIn the letters game, one player will enter a word. (This is top-secret! Don't let the other players" +
-         "\nsee it!) Then each other player will be shown a scrambled version. Unscramble it before time runs" +
-         "\nout. Then the next player will enter a word and each other player will guess. The game ends when" +
-         "\neach player has had a turn entering a word. One point is given for each word correctly unscrambled." +
-         "\n\tIn the numbers game, all players are shown six 'building' numbers and a target number. Players" +
-         "\nadd and subtract the building numbers to try to reach the target. When time's up, each player enters" +
-         "\ntheir solution, the numbers and the operations they used to reach the target number. Players get 3" +
-         "\npoints for getting straight to the target number and 1 point for getting within 10 of the target." +
+      JOptionPane.showMessageDialog(null, "In Ciphermasters, you and your friends are code-making and code-breaking secret agents" + 
+         " in a high-stakes race against time." + 
+         "\nTake turns hiding top secret information in the lettersgame, then go head-to-head against " +
+         "the Computer as you try to break through its security system.");
+      JOptionPane.showMessageDialog(null, "In the letters game, one player will enter a word." + 
+         "\n(This is top-secret! Don't let the other players see it!) " +
+         "\nThen everyone will be shown a scrambled version of this word, called an anagram. " +
+         "\nUnscramble the anagram before time runs out." +  
+         "\nEach player will then enter their guess." + 
+         "\nThe game ends when each player has had a turn choosing the anagram." +
+         "\nOne point is given for each word correctly unscrambled. " +
+         "\nAs the levels get harder, the anagrams will get longer and you'll have less time to decode them!");
+      JOptionPane.showMessageDialog(null, "In the numbers game, all players are shown six" +
+         " 'building' numbers and a target number."+
+         "\nPlayers add and subtract the building numbers to try to reach the target." +
+         "\nWhen the timer runs out, each player enters their solution: the numbers and" +
+         " the operations they used to reach the target number."+
+         "\nEach player gets 3 points for getting the target number exactly and 1 point for getting within 10 of the target." +
          "\nCareful, in some levels, you might need to subtract!");
    }
 
