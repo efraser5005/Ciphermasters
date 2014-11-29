@@ -65,7 +65,11 @@ public class Ciphermasters{
       int numbLev = 1;
    
       while(again == true){
-         System.out.print("which game would you like to play? Enter 1 for the letters game, 2 for the numbers game, 3 to read instructions and 0 to exit the game. ");
+      
+         String chooser = names[WhoChooses(totalScore)];
+         
+         System.out.print(chooser + ", which game would you like to play?" + 
+               "/nEnter 1 for the letters game, 2 for the numbers game, 3 to read instructions and 0 to exit the game. ");
          int choice = sc.nextInt();
          
          if(choice == 1){
@@ -89,13 +93,8 @@ public class Ciphermasters{
          }
          else{
             System.out.println("I'm sorry. I don't recognize that command. Please enter 1 for the letters game, 2 for the numbers game, 3 to read instructions or 0 to exit the game. ");
-            choice = sc.nextInt();
          }
       }
-      
-      for(int i = 0; i < totalScore.length; i++){
-         totalScore[i] += 1;   //I'll have to change this line for sure
-      }      
    
    }//end ChooseGame method
    
@@ -240,15 +239,22 @@ public class Ciphermasters{
   //gives the index in names[] of the person who gets to choose which game is played next
    public static int WhoChooses(int [] score){
       int count = 0;
+      int min = score[0];
+      
+      for(int i = 0; i < score.length; i++){
+         if(socre[i] < min){
+            min = score[i];
+      }
+      
       for (int j=0; j<score.length; j++){
-         if (score[j] == 0){
+         if (score[j] == min){
             count++;
          }
       }
       int [] Losers = new int [count];
       int newCount = 0;
       for (int k = 0; k<score.length; k++){
-         if (score[k] == 0){
+         if (score[k] == min){
             Losers[newCount] = k;
             newCount++;
          }
