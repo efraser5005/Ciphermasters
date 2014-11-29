@@ -5,14 +5,14 @@ import java.util.Scanner;
 import java.util.Random;
 import javax.swing.JOptionPane;
 
-public class Ciphermasters{
+public class FraserCarlineProject{
    public static void main(String[] args){
       
-      StartUp();
+      Ciphermasters();
 
    }//end main method
    
-   //This method initializes a bunch of stuff for the game
+   //This method contains the entire game of Ciphermasters.
    public static void StartUp(){
    
       Scanner sc = new Scanner(System.in);
@@ -21,8 +21,10 @@ public class Ciphermasters{
       
       System.out.print("How many Ciphermasters are playing today? ");
       int numPlayers = sc.nextInt();
+      
       String[] names = new String[numPlayers];
       int[] totalScore = new int[numPlayers];
+      
       int level = 0;
       
       for(int i = 0; i < numPlayers; i++){
@@ -34,8 +36,8 @@ public class Ciphermasters{
  
    }
    
-   //This method controls the flow of the game. It calls one of the Letters game, Numbers game,
-         //the Instructions method or the end-game (WrapUp) method 
+   /*This method controls the flow of the game. It calls one of the Letters game, Numbers game,
+         the Instructions method or the end-game (WrapUp) method */
    public static void ChooseGame(int[] totalScore, String[] names){
       
       Scanner sc = new Scanner(System.in);
@@ -79,24 +81,36 @@ public class Ciphermasters{
    }//end ChooseGame method
    
    //This method plays the Letters game
+   //note: Method returns the score of a single game; Moving up a level does not happen within this method.
    public static int[] Letters(int [] totalScore, int level, String[] names){
       
       Scanner kb = new Scanner(System.in);
       boolean isTimeUp;
       int [] gameScore = new int[names.length];
+      
+      //Sets the number of letters in the anagram according to the level.
+      //note: The number of letters never exceeds 10.
+      int numLets;
+      if (level < 24){
+         numLets = level/3 + 2;
+      }
+      else {
+         numLets = 10;
+      }
+         
+      //Each player will have the chance to choose the anagram word.
+      /*On a given player's turn, after the time is up, the rest of the players
+         are randomly selected to enter their answers.*/
+      //Answers are checked and score is immediately displayed.
       for (int i=0; i<names.length; i++){
-         int numLets;
-         if (level < 10)
-            numLets = level/3 + 2;
-         else
-            numLets = 9;
-         String word = JOptionPane.showInputDialog(names[i] +
+          String word = JOptionPane.showInputDialog(names[i] +
             ", it's your turn. Please enter a " +
             numLets + "-letter word:");
-         while (word.length()!=numLets)
+         while (word.length()!=numLets){           //word must have correct number of letters
             word = JOptionPane.showInputDialog("Your word must have " + 
                numLets + " letters. \nPlease try again:");
-         word = areAllLetts(word);
+         }
+         word = areAllLetts(word);               //word must be all letters
          String drow = Scramble(word);
          System.out.println("Okay everyone. The anagram is: " + drow); 
          isTimeUp = Timer("letters",level);
@@ -117,17 +131,20 @@ public class Ciphermasters{
             JOptionPane.showMessageDialog(null,"This round is finished. Get ready " + names[i+1] + 
             " to enter a word to be scrambled!");
          }
+         //Prints everyone's scores at end of game.
          else {
             JOptionPane.showMessageDialog(null,"This game is finished. The scores are:\n" + 
                printArrList(gameScore, names)); 
          }
+         //Updates totalScore.
          for (int h=0; h<gameScore.length; h++){
             totalScore[h] += gameScore[h];
          }
       }
       return gameScore; 
    }
-//Is word only letters method
+   
+   //Is word only letters method
    //Checks that entered word is only letters
    //If not, gets user to enter another word
    //Continues until a word is entered that only contains letters
@@ -172,7 +189,9 @@ public class Ciphermasters{
       return scrambled;
    }
    
-   //This is the Timer. Playtime allowed depends on game and level.
+   //This is the Timer. 
+   //The amount of time allowed depends on which game is being played and the level.
+   //returns true, after the amount of time has passed.
    public static boolean Timer(String game, int level){ 
       boolean isTimeUp = false;
       
@@ -202,10 +221,10 @@ public class Ciphermasters{
       return isTimeUp;  
    }
      
-     //Random Player order method
-     //Creates array with nums from 1 to numPlayers
-     //Shuffles the elements and returns the array
-     public static int[] RandPlayerOrder(int numPlayers){
+   //Random Player order method
+   //Creates array with numbers from 1 to numPlayers
+   //Shuffles the elements and returns the array
+   public static int[] RandPlayerOrder(int numPlayers){
       int [] playArr = new int[numPlayers];
       for (int i=0; i < numPlayers; i++)
          playArr[i]= i;
@@ -221,8 +240,8 @@ public class Ciphermasters{
       return playArr;
    }
   
-   //display scores method
-   //prints Player : [gameSCore[player]] for all players in the array
+   //Display scores method.
+   //For each player, prints player's name followed by ":" and their score.
     public static String printArrList(int[] gamescore, String [] names){
       String scoreList = "";
       for (int k=0; k<gamescore.length; k++){
@@ -232,22 +251,27 @@ public class Ciphermasters{
    }
    
   // Who chooses next game method
-  //gives the index in names[] of the person who gets to choose which game is played next
+  //Gives the index in names[] of the person who gets to choose which type of game is played next
    public static int WhoChooses(int [] score){
       int count = 0;
       int min = score[0];
       
+      //Finds minimum score.
       for(int i = 0; i < score.length; i++){
          if(score[i] < min){
             min = score[i];
          }
       }
       
+      //Counts the number of players with the minimum score/
       for (int j=0; j<score.length; j++){
          if (score[j] == min){
             count++;
          }
       }
+      
+      //Creates new array, Losers[].
+      //Holds the indexes in names[] of the players with min score.
       int [] Losers = new int [count];
       int newCount = 0;
       for (int k = 0; k<score.length; k++){
@@ -256,26 +280,32 @@ public class Ciphermasters{
             newCount++;
          }
       }
+      //Randomly choses a person in Losers[].
       Random rnd = new Random();
       int index = rnd.nextInt(Losers.length);
       int who = Losers[index];
       return who;
    }
    
-   //LevelUp method
+   //LevelUp method (for Letters)
+   //Level increases if more than 80% of the players guess 
    public static int LevelUp(int [] gameScore){
       int level = 0;
-      double percentRight = 0;
+      double average = 0;
       double sumScores = 0;
       for (int j=0; j<gameScore.length; j++){
          sumScores = sumScores + gameScore[j];
       }
-      percentRight = sumScores/gameScore.length;
-      if (percentRight > 0.8){
+      average = sumScores/(gameScore.length -1)/(gameScore.length-1);
+      if (average > 0.8){
          System.out.println("Great work with those anagrams, code-breakers! Let's move to the next level!");
          level = 1;
       }
-      else if(sumScores <= gameScore.length){
+      else if (average > 0.5){
+         System.out.prinln("Well done. Let's practice some more anagrams like this.")
+         level = 0;
+      }
+      else {
          System.out.println("Let's try some more practice anagrams, code-breakers, before tackling a code this tough again.");
          level = -1;
       }
