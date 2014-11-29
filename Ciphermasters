@@ -74,7 +74,7 @@ public class Ciphermasters{
             for(int i = 0; i < names.length; i++){
                totalscore[i] += gamescore[i];
             }
-            LevelUp(Letters);
+            lettLev = LevelUp(Letters);
          }
          else if(choice ==2){
             System.out.println("You have chosen the numbers game!");
@@ -99,9 +99,183 @@ public class Ciphermasters{
    
    }//end ChooseGame method
    
-   public static void Letters(){
-      System.out.println("This is where the letters game will be played.");
-   }//end Letters method
+   public static int[] Letters(int level, String[] names){
+      
+      Scanner kb = new Scanner(System.in);
+      int [] gameScore = new int[names.length];
+      for (int i=0; i<names.length; i++){
+         int time = 60 - 15*((level-1)%3);
+         int numLets;
+         if (level < 10)
+            numLets = level/3 + 2;
+         else
+            numLets = 9;
+         String word = JOptionPane.showInputDialog(names[i] +
+            ", it's your turn. Please enter a " +
+            numLets + "-letter word:");
+         while (word.length()!=numLets)
+            word = JOptionPane.showInputDialog("Your word must have " + 
+               numLets + " letters. \nPlease try again:");
+         word = areAllLetts(word);
+         String drow = Scramble(word);
+         System.out.println("Okay everyone. The anagram is: " + drow + 
+            "\nYou have " + time + " seconds to unscramble the word."); 
+         Timer("letters",level);
+         int [] inputOrder = RandPlayerOrder(names.length);
+         for (int m=0; m<names.length; m++){
+            if (inputOrder[m]!= i){
+               String ans = JOptionPane.showInputDialog(names[inputOrder[m]]+
+                  ", please enter your answer:");
+               if (ans.equals(word)){
+                  gameScore[inputOrder[m]]++;
+               }
+               System.out.println("Score of " + names[m] + " is " + gameScore[m]);
+            }
+         }
+         if (i+1!=names.length){
+            JOptionPane.showMessageDialog(null,"This round is finished. Get ready " + names[i+1] + 
+            " to enter a word to be scrambled!");
+         }
+         else {
+            JOptionPane.showMessageDialog(null,"This game is finished. The scores are:\n" + 
+               printArrList(gameScore, names)); 
+         }
+      }
+      return gameScore; 
+   }
+//Is word only letters method
+   //Checks that entered word is only letters
+   //If not, gets user to enter another word
+   //Continues until a word is entered that only contains letters
+   public static String areAllLetts(String word){  
+      Scanner kb = new Scanner(System.in);
+      boolean nonLet = true;
+      while (nonLet==true){
+         nonLet = false;
+         for (int m=0; m<word.length();m++)
+            if (Character.isLetter(word.charAt(m))==false)
+               nonLet=true;
+         if (nonLet == true)
+            word = JOptionPane.showInputDialog("You must enter a word. \nTry again:"); 
+      }
+      return word;
+   }
+   
+   //Scramble method
+   //Takes in a string, reorders the letters
+    public static String Scramble(String word){
+      char [] letArray = new char[word.length()];
+      for (int i=0; i < word.length(); i++){
+         letArray[i]= word.charAt(i);
+      }
+      Random rnd = new Random();
+      int numSwaps = rnd.nextInt(20);
+      for (int i=0; i<=numSwaps; i++){
+         int leng = word.length();
+         if (leng>0){
+            int a = rnd.nextInt(leng);
+            int b = rnd.nextInt(leng);
+            char c = letArray[a];
+            letArray[a] = letArray[b];
+            letArray[b] = c; 
+         }
+      }
+      String scrambled;
+      scrambled = "";
+      for (int i=0; i<letArray.length; i++){
+         scrambled = scrambled + letArray[i];
+      }
+      return scrambled;
+   }
+   
+   //Timer method 
+   //Amount of counting depends on which game and level
+      public static void Timer(String game, int level){ 
+      int playtime = 0; 
+      int [] letlev = {60, 45, 30};
+      int []numblev = {70,60,50,40,30};
+      if (game.equals("letters")) 
+         playtime = letlev[(level)%3];
+      else if (game.equals("numbers"));
+         playtime = numblev[(level)%5]; 
+      long start = System.currentTimeMillis();
+      long i=0;
+      while (i <= start+30000){
+         i=System.currentTimeMillis();
+         i++;
+      }
+      System.out.println("Time is up!");  
+   }
+     
+     //Random Player order method
+     //Creates array with nums from 1 to numPlayers
+     //Shuffles the elements and returns the array
+     public static int[] RandPlayerOrder(int numPlayers){
+      int [] playArr = new int[numPlayers];
+      for (int i=0; i < numPlayers; i++)
+         playArr[i]= i;
+      Random rnd = new Random();
+      int numSwaps = rnd.nextInt(20);
+      for (int i=0; i<numSwaps; i++){
+         int a = rnd.nextInt(numPlayers);
+         int b = rnd.nextInt(numPlayers);
+         int c = playArr[a];
+         playArr[a] = playArr[b];
+         playArr[b] = c; 
+      }
+      return playArr;
+   }
+  
+   //display scores method
+   //prints Player : [gameSCore[player]] for all players in the array
+    public static String printArrList(int[] gamescore, String [] names){
+      String scoreList = "";
+      for (int k=0; k<gamescore.length; k++){
+         scoreList = scoreList + names[k] + ": " + (gamescore[k] + "\n");
+      }
+      return scoreList;
+   }
+   
+  // Who chooses next game method
+  //gives the index in names[] of the person who gets to choose which game is played next
+   public static int WhoChooses(int [] score){
+      int count = 0;
+      for (int j=0; j<score.length; j++){
+         if (score[j] == 0){
+            count++;
+         }
+      }
+      int [] Losers = new int [count];
+      int newCount = 0;
+      for (int k = 0; k<score.length; k++){
+         if (score[k] == 0){
+            Losers[newCount] = k;
+            newCount++;
+         }
+      }
+      Random rnd = new Random();
+      int index = rnd.nextInt(Losers.length);
+      int who = Losers[index];
+      return who;
+   }
+   
+   //LevelUp method
+   public static int LevelUp(int [] gameScore){
+      int level = 0;
+      double percentRight = 0;
+      double sumScores = 0;
+      for (int j=0; j<gameScore.length; j++){
+         sumScores = sumScores + gameScore[j];
+      }
+      percentRight = sumScores/gameScore.length;
+      if (percentRight > 0.8){
+         level = 1;
+      }
+      return level;
+   }
+
+
+   
    
    //This method plays the Numbers game
    public static int Numbers(int level, String[] names, int[] totalScore){
