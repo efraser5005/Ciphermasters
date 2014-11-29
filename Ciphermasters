@@ -217,7 +217,6 @@ public class FraserCarlineProject{
       System.out.println("You have " + playtime + " seconds. Ready...set...GO!"); 
       long start = System.currentTimeMillis();
       long i=0;
-      int counter = 0;
       while (i <= start + playtime * 1000){
          i=System.currentTimeMillis();
       }
