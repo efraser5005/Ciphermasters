@@ -220,7 +220,7 @@ public class FraserCarlineProject{
       while (i <= start + playtime * 1000){
          i=System.currentTimeMillis();
       }
-      if(i == 1 + start + playtime * 1000){
+      if(i/1000 == start/1000 + playtime){
          isTimeUp = true;
          System.out.println("Time is up!");
       }
