@@ -16,7 +16,7 @@ public class Ciphermasters{
       }
    }//end main method
    
-   //This method initialized a bunch of stuff for the game
+   //This method initializes a bunch of stuff for the game
    public static int[] StartUp(){
    
       Scanner sc = new Scanner(System.in);
